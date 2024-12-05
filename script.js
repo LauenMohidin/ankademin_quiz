@@ -15,3 +15,26 @@ const questions = [
     { question: "Karim Benzema har varit anfallare för Real Madrid.", answer: true },
     { question: "Real Madrid har aldrig förlorat en El Clasico match, det vill säga mot Barcelona.", answer: false }
 ];
+let userAnswers = [];
+
+function startQuiz() {
+    document.getElementById('startQuizBtn').style.display = 'none';
+    document.getElementById('quizContainer').style.display = 'block';
+
+    const quizContainer = document.getElementById('quizContainer');
+    questions.forEach((q, index) => {
+        const questionElement = document.createElement('div');
+        questionElement.innerHTML = `
+            <p>${index + 1}. ${q.question}</p>
+            <button onclick="answerQuestion(${index}, true)">Sant</button>
+            <button onclick="answerQuestion(${index}, false)">Falskt</button>
+        `;
+        quizContainer.appendChild(questionElement);
+    });
+}
+
+function answerQuestion(index, answer) {
+    userAnswers[index] = answer;
+}
+
+document.getElementById('startQuizBtn').addEventListener('click', startQuiz);

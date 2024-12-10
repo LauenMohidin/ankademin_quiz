@@ -1,8 +1,4 @@
-document.getElementById('toggleThemeBtn').addEventListener('click', toggleTheme);
-
-function toggleTheme() {
-    document.body.classList.toggle('dark-mode');
-}
+document.getElementById('startQuizBtn').addEventListener('click', startQuiz);
 const questions = [
     { question: "Real Madrid har vunnit fler än 10 Champions League titlar.", answer: true },
     { question: "Cristiano Ronaldo har spelat för Real Madrid.", answer: true },
@@ -15,7 +11,7 @@ const questions = [
     { question: "Karim Benzema har varit anfallare för Real Madrid.", answer: true },
     { question: "Real Madrid har aldrig förlorat en El Clasico match, det vill säga mot Barcelona.", answer: false }
 ];
-let userAnswers = [];
+let userAnswers = new Array(questions.length).fill(null);
 
 function startQuiz() {
     document.getElementById('startQuizBtn').style.display = 'none';
@@ -24,20 +20,49 @@ function startQuiz() {
     const quizContainer = document.getElementById('quizContainer');
     questions.forEach((q, index) => {
         const questionElement = document.createElement('div');
-        questionElement.innerHTML = `
-            <p>${index + 1}. ${q.question}</p>
-            <button onclick="answerQuestion(${index}, true)">Sant</button>
-            <button onclick="answerQuestion(${index}, false)">Falskt</button>
-        `;
+        questionElement.classList.add('question');
+
+        const questionText = document.createElement('p');
+        questionText.textContent = `${index + 1}. ${q.question}`;
+        questionElement.appendChild(questionText);
+
+        const trueButton = document.createElement('button');
+        trueButton.textContent = 'Sant';
+        trueButton.addEventListener('click', () => answerQuestion(index, true));
+        questionElement.appendChild(trueButton);
+
+        const falseButton = document.createElement('button');
+        falseButton.textContent = 'Falskt';
+        falseButton.addEventListener('click', () => answerQuestion(index, false));
+        questionElement.appendChild(falseButton);
+
         quizContainer.appendChild(questionElement);
     });
+
+    const finishButton = document.createElement('button');
+    finishButton.textContent = 'Avsluta Quiz';
+    finishButton.addEventListener('click', finishQuiz);
+    quizContainer.appendChild(finishButton);
 }
 
 function answerQuestion(index, answer) {
     userAnswers[index] = answer;
+
+    const questionElement = document.querySelectorAll('.question')[index];
+    const feedback = document.createElement('p');
+    if (answer === questions[index].answer) {
+        feedback.textContent = "Rätt svar!";
+        feedback.style.color = "green";
+    } else {
+        feedback.textContent = "Fel svar!";
+        feedback.style.color = "red";
+    }
+    questionElement.appendChild(feedback);
+
+    const buttons = questionElement.querySelectorAll('button');
+    buttons.forEach(button => button.disabled = true);
 }
 
-document.getElementById('startQuizBtn').addEventListener('click', startQuiz);
 function finishQuiz() {
     let correctAnswers = 0;
     questions.forEach((q, index) => {
@@ -47,6 +72,9 @@ function finishQuiz() {
     });
 
     const percentage = (correctAnswers / questions.length) * 100;
+    const quizContainer = document.getElementById('quizContainer');
+    quizContainer.innerHTML = '';  
+
     const resultMessage = document.createElement('p');
 
     if (percentage < 50) {
@@ -60,9 +88,11 @@ function finishQuiz() {
         resultMessage.style.color = 'green';
     }
 
-    const quizContainer = document.getElementById('quizContainer');
-    quizContainer.innerHTML = '';
     quizContainer.appendChild(resultMessage);
 }
 
-document.getElementById('finishQuizBtn')?.addEventListener('click', finishQuiz);
+document.getElementById('toggleThemeBtn').addEventListener('click', toggleTheme);
+
+function toggleTheme() {
+    document.body.classList.toggle('dark-mode');
+}

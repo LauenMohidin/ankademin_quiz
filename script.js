@@ -13,6 +13,7 @@ const questions = [
 ];
 let userAnswers = new Array(questions.length).fill(null);
 
+// Startar quizet och genererar frågor
 function startQuiz() {
     document.getElementById('startQuizBtn').style.display = 'none';
     document.getElementById('quizContainer').style.display = 'block';
@@ -45,10 +46,13 @@ function startQuiz() {
     quizContainer.appendChild(finishButton);
 }
 
+// Denna visar feedback när användaren trycker på sant eller falskt
 function answerQuestion(index, answer) {
     userAnswers[index] = answer;
 
     const questionElement = document.querySelectorAll('.question')[index];
+    
+    // Denna checkar om svaret är rätt eller fel och visa feedback
     const feedback = document.createElement('p');
     if (answer === questions[index].answer) {
         feedback.textContent = "Rätt svar!";
@@ -59,10 +63,12 @@ function answerQuestion(index, answer) {
     }
     questionElement.appendChild(feedback);
 
+    // Denna gör knapparna gråa alltså inaktiverar så att användaren inte kan ändra sitt svar
     const buttons = questionElement.querySelectorAll('button');
     buttons.forEach(button => button.disabled = true);
 }
 
+// Denna visar resultaet efter att ha klarat quizet
 function finishQuiz() {
     let correctAnswers = 0;
     questions.forEach((q, index) => {
@@ -71,12 +77,14 @@ function finishQuiz() {
         }
     });
 
+    // Denna beräknar resultatet i procent vilket är krav för uppgiften
     const percentage = (correctAnswers / questions.length) * 100;
     const quizContainer = document.getElementById('quizContainer');
     quizContainer.innerHTML = '';  
 
     const resultMessage = document.createElement('p');
 
+    // Denna visar resultatet med procent och olika färger beroende på hur det går i quizet
     if (percentage < 50) {
         resultMessage.textContent = `Underkänt - Du fick ${correctAnswers} av ${questions.length} rätt.`;
         resultMessage.style.color = 'red';
@@ -93,6 +101,7 @@ function finishQuiz() {
 
 document.getElementById('toggleThemeBtn').addEventListener('click', toggleTheme);
 
+// Denna funktion här nedan krävs för att kunna byta mellan dark mode och light mode
 function toggleTheme() {
     document.body.classList.toggle('dark-mode');
 }

@@ -38,3 +38,31 @@ function answerQuestion(index, answer) {
 }
 
 document.getElementById('startQuizBtn').addEventListener('click', startQuiz);
+function finishQuiz() {
+    let correctAnswers = 0;
+    questions.forEach((q, index) => {
+        if (userAnswers[index] === q.answer) {
+            correctAnswers++;
+        }
+    });
+
+    const percentage = (correctAnswers / questions.length) * 100;
+    const resultMessage = document.createElement('p');
+
+    if (percentage < 50) {
+        resultMessage.textContent = `Underkänt - Du fick ${correctAnswers} av ${questions.length} rätt.`;
+        resultMessage.style.color = 'red';
+    } else if (percentage <= 75) {
+        resultMessage.textContent = `Bra - Du fick ${correctAnswers} av ${questions.length} rätt.`;
+        resultMessage.style.color = 'orange';
+    } else {
+        resultMessage.textContent = `Riktigt bra jobbat - Du fick ${correctAnswers} av ${questions.length} rätt.`;
+        resultMessage.style.color = 'green';
+    }
+
+    const quizContainer = document.getElementById('quizContainer');
+    quizContainer.innerHTML = '';
+    quizContainer.appendChild(resultMessage);
+}
+
+document.getElementById('finishQuizBtn')?.addEventListener('click', finishQuiz);
